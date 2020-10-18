@@ -2,9 +2,8 @@ package com.udacity.jdnd.course3.critter.entitiy;
 
 import org.hibernate.annotations.Nationalized;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Customer {
@@ -17,6 +16,9 @@ public class Customer {
 
     private String phone;
     private String notes;
+
+    @OneToMany(mappedBy = "ownerId")
+    private List<Pet> pets;
 
     public Long getId() {
         return id;
