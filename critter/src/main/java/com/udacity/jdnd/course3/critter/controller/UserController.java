@@ -1,11 +1,17 @@
 package com.udacity.jdnd.course3.critter.controller;
 
+import com.udacity.jdnd.course3.critter.entitiy.Customer;
+import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.view.CustomerDTO;
 import com.udacity.jdnd.course3.critter.view.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.view.EmployeeRequestDTO;
+import javassist.NotFoundException;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,20 +24,37 @@ import java.util.Set;
 @RestController
 @RequestMapping("/user")
 public class UserController {
+    @Autowired
+    CustomerService customerService;
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+        Customer customer = convertCustomerDTOToCustomer(customerDTO);
+
+        customerService.saveCustomer(customer);
+        customerDTO.setId(customer.getId());
+        return customerDTO;
+
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        List<Customer> customers = customerService.getAllCustomers();
+        List<CustomerDTO> customerDTOS = new ArrayList<>();
+        for (Customer customer:
+             customers) {
+            CustomerDTO customerDTO = convertCustomerToCustomerDTO(customer);
+            customerDTOS.add(customerDTO);
+        }
+        return customerDTOS;
     }
 
     @GetMapping("/customer/pet/{petId}")
-    public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+    public CustomerDTO getOwnerByPet(@PathVariable long petId) throws NotFoundException {
+
+        Customer customer = customerService.getOwnerByPet(petId);
+        CustomerDTO customerDTO = convertCustomerToCustomerDTO(customer);
+        return customerDTO;
     }
 
     @PostMapping("/employee")
@@ -52,6 +75,18 @@ public class UserController {
     @GetMapping("/employee/availability")
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         throw new UnsupportedOperationException();
+    }
+
+    public Customer convertCustomerDTOToCustomer(CustomerDTO customerDTO){
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerDTO, customer);
+        return customer;
+    }
+
+    public CustomerDTO convertCustomerToCustomerDTO(Customer customer){
+        CustomerDTO customerDTO = new CustomerDTO();
+        BeanUtils.copyProperties(customer, customerDTO);
+        return customerDTO;
     }
 
 }

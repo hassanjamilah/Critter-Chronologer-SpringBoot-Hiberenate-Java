@@ -8,13 +8,13 @@ import java.util.List;
 @Entity
 public class Customer {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Nationalized
     private String name;
 
-    private String phone;
+    private String phoneNumber;
     private String notes;
 
     @OneToMany(mappedBy = "ownerId")
@@ -36,13 +36,7 @@ public class Customer {
         this.name = name;
     }
 
-    public String getPhone() {
-        return phone;
-    }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     public String getNotes() {
         return notes;
@@ -58,5 +52,13 @@ public class Customer {
 
     public void setPets(List<Pet> pets) {
         this.pets = pets;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 }
