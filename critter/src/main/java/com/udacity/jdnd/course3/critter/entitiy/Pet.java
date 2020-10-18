@@ -62,4 +62,12 @@ public class Pet {
     public void setNotes(String notes) {
         this.notes = notes;
     }
+
+    public Customer getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Customer ownerId) {
+        this.ownerId = ownerId;
+    }
 }

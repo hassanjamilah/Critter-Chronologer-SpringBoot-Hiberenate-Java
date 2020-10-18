@@ -28,4 +28,6 @@ public class WeekDays {
     public void setDayName(String dayName) {
         this.dayName = dayName;
     }
+
+
 }

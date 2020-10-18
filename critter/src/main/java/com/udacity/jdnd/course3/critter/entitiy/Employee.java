@@ -21,4 +21,36 @@ public class Employee {
 
     @ManyToMany
     private Set<WeekDays> workingDays;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Activity> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<Activity> skills) {
+        this.skills = skills;
+    }
+
+    public Set<WeekDays> getWorkingDays() {
+        return workingDays;
+    }
+
+    public void setWorkingDays(Set<WeekDays> workingDays) {
+        this.workingDays = workingDays;
+    }
 }

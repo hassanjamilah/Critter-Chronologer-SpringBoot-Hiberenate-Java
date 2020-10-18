@@ -30,4 +30,6 @@ public class Activity {
     public void setActivityName(String activityName) {
         this.activityName = activityName;
     }
+
+
 }
