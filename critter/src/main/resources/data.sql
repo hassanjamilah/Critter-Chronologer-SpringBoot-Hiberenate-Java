@@ -14,4 +14,7 @@ insert into week_days (id, day_name) values (7, 'Friday');
 
 -- TODO: Temp please remove tis
 insert into customer (name, phone_number) values ('hassan13' , '132432423');
+insert into customer (name, phone_number) values ('Maya' , '132432423');
 insert into pet (name, type, owner_id_id) values ('my cat', 1, 1) ;
+insert into pet (name, type, owner_id_id) values ('my cat 2', 2, 1) ;
+insert into pet (name, type, owner_id_id) values ('my bird 2', 2, 2) ;

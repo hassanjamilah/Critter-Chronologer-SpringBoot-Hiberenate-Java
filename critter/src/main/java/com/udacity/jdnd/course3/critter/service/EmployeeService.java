@@ -16,7 +16,9 @@ public class EmployeeService {
     EmployeeRepository employeeRepository;
 
     public Long saveEmployee(Employee employee){
-        return 0L;
+        employeeRepository.save(employee);
+        return  employee.getId();
+
     }
 
     public void addEmployeeShedule(Employee employee, Schedule schedule){
@@ -24,6 +26,7 @@ public class EmployeeService {
     }
 
     public boolean checkAvailability(Employee employee){
+
         return false;
     }
 

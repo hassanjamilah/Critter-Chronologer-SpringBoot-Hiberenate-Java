@@ -2,12 +2,14 @@ package com.udacity.jdnd.course3.critter.service;
 
 import com.udacity.jdnd.course3.critter.entitiy.Customer;
 import com.udacity.jdnd.course3.critter.entitiy.Pet;
+import com.udacity.jdnd.course3.critter.entitiy.types.PetType;
 import com.udacity.jdnd.course3.critter.repository.PetRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,15 +26,19 @@ public class PetService {
 
     // TODO: 18/10/2020
     public Long savePit(Pet pet){
-        return 0L;
+
+        petRepository.save(pet);
+        return pet.getId();
     }
 
     public List<Pet> getAllPets(){
-        return null;
+        return petRepository.findAll();
     }
 
-    public List<Pet> getPetsByOwner(){
-        return null;
+    public List<Pet> getPetsByOwner(Long ownerID){
+        List<Pet> pets = petRepository.getAllMy(ownerID);
+        return pets;
+
     }
 
     public void addPetToCustomer(Long petID, Long customerID) throws NotFoundException {

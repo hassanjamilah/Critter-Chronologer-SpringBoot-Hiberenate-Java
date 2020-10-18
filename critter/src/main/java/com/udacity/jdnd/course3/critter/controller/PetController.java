@@ -1,8 +1,15 @@
 package com.udacity.jdnd.course3.critter.controller;
 
+import com.udacity.jdnd.course3.critter.entitiy.Pet;
+import com.udacity.jdnd.course3.critter.service.PetService;
 import com.udacity.jdnd.course3.critter.view.PetDTO;
+import javassist.NotFoundException;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,24 +18,56 @@ import java.util.List;
 @RestController
 @RequestMapping("/pet")
 public class PetController {
+    @Autowired
+    PetService petService;
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
-        throw new UnsupportedOperationException();
+        Pet pet = convertPetDTOTOPet(petDTO);
+        petService.savePit(pet);
+        petDTO.setId(pet.getId());
+        return  petDTO;
     }
 
     @GetMapping("/{petId}")
-    public PetDTO getPet(@PathVariable long petId) {
-        throw new UnsupportedOperationException();
+    public PetDTO getPet(@PathVariable long petId) throws NotFoundException {
+        Pet pet = petService.getPetByID(petId);
+        return converPetToPetDTO(pet);
     }
 
     @GetMapping
     public List<PetDTO> getPets(){
-        throw new UnsupportedOperationException();
+        List<Pet> allPets = petService.getAllPets();
+        List<PetDTO> petDtos = converListPetsToListPetDTOs(allPets);
+
+        return petDtos;
     }
 
     @GetMapping("/owner/{ownerId}")
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
-        throw new UnsupportedOperationException();
+        List<Pet> allPets = petService.getPetsByOwner(ownerId);
+        return converListPetsToListPetDTOs(allPets);
+    }
+
+    public Pet convertPetDTOTOPet(PetDTO petDTO){
+        Pet pet  = new Pet();
+        BeanUtils.copyProperties(petDTO, pet);
+        return pet;
+    }
+
+    public PetDTO converPetToPetDTO(Pet pet){
+        PetDTO petDTO = new PetDTO();
+        BeanUtils.copyProperties(pet, petDTO);
+        return petDTO;
+    }
+
+    public List<PetDTO> converListPetsToListPetDTOs(List<Pet> allPets){
+        List<PetDTO> petDtos = new ArrayList<>();
+        for (Pet pet:
+                allPets) {
+            PetDTO petDTO = converPetToPetDTO(pet);
+            petDtos.add(petDTO);
+        }
+        return petDtos;
     }
 }
