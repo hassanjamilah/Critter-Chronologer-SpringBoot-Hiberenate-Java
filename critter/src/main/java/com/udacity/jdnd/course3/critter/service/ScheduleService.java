@@ -1,5 +1,6 @@
 package com.udacity.jdnd.course3.critter.service;
 
+import com.udacity.jdnd.course3.critter.entitiy.Customer;
 import com.udacity.jdnd.course3.critter.entitiy.Employee;
 import com.udacity.jdnd.course3.critter.entitiy.Pet;
 import com.udacity.jdnd.course3.critter.entitiy.Schedule;
@@ -23,6 +24,9 @@ public class ScheduleService {
     @Autowired
     EmployeeService employeeService;
 
+    @Autowired
+    CustomerService customerService;
+
 
     public Long createSchedule(Schedule schedule) {
         scheduleRepository.save(schedule);
@@ -45,7 +49,11 @@ public class ScheduleService {
         return schedules;
     }
 
-    public Schedule findScheduleByOwner(Long customerID){
-        return null;
+    public List<Schedule> findScheduleByOwner(Long customerID) throws NotFoundException {
+        Customer customer = customerService.getCustomerByID(customerID);
+        Pet pet = new Pet();
+        pet.setId(1L);
+        List<Schedule> schedules = scheduleRepository.findAllByPetsOwnerId(customer);
+        return schedules;
     }
 }

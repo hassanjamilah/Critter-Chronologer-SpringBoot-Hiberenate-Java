@@ -5,6 +5,7 @@ import org.hibernate.annotations.Nationalized;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Pet {
@@ -22,6 +23,9 @@ public class Pet {
 
     @ManyToOne
     private Customer ownerId;
+
+    @ManyToMany
+    private List<Schedule> schedules;
 
     public Long getId() {
         return id;
