@@ -13,6 +13,13 @@ public class WeekDays {
 
     private String dayName;
 
+    public WeekDays() {
+    }
+
+    public WeekDays(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

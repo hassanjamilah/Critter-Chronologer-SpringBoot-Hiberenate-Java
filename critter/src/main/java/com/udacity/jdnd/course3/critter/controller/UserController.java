@@ -1,7 +1,12 @@
 package com.udacity.jdnd.course3.critter.controller;
 
+import com.udacity.jdnd.course3.critter.entitiy.Activity;
 import com.udacity.jdnd.course3.critter.entitiy.Customer;
+import com.udacity.jdnd.course3.critter.entitiy.Employee;
+import com.udacity.jdnd.course3.critter.entitiy.WeekDays;
+import com.udacity.jdnd.course3.critter.entitiy.types.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
+import com.udacity.jdnd.course3.critter.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.view.CustomerDTO;
 import com.udacity.jdnd.course3.critter.view.EmployeeDTO;
 import com.udacity.jdnd.course3.critter.view.EmployeeRequestDTO;
@@ -10,8 +15,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +33,9 @@ import java.util.Set;
 public class UserController {
     @Autowired
     CustomerService customerService;
+
+    @Autowired
+    EmployeeService employeeService;
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
@@ -59,7 +69,10 @@ public class UserController {
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+        Employee employee = convertEmployeeDTOToEmployee(employeeDTO);
+        employeeService.saveEmployee(employee);
+        employeeDTO.setId(employee.getId());
+        return employeeDTO;
     }
 
     @PostMapping("/employee/{employeeId}")
@@ -68,13 +81,29 @@ public class UserController {
     }
 
     @PutMapping("/employee/{employeeId}")
-    public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+    public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) throws NotFoundException {
+        Employee employee = employeeService.getEmployeeByID(employeeId);
+        employee.setWorkingDays(new HashSet<>());
+        for (DayOfWeek day:
+                daysAvailable) {
+            WeekDays newDay = new WeekDays();
+            newDay.setId((long) (day.ordinal()+1));
+            employee.getWorkingDays().add(newDay);
+        }
+        employeeService.saveEmployee(employee);
     }
 
     @GetMapping("/employee/availability")
-    public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
-        throw new UnsupportedOperationException();
+    public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) throws ParseException {
+
+        List<Activity> allSkills = new ArrayList<>();
+        for (EmployeeSkill skill:
+             employeeDTO.getSkills()) {
+            allSkills.add(new Activity((long) (skill.ordinal()+1)));
+        }
+
+        List<Employee> allEmployees =  employeeService.checkAvailability(allSkills, employeeDTO.getDate());
+        return  convertListEmployeesToListEmployeesDTOs(allEmployees);
     }
 
     public Customer convertCustomerDTOToCustomer(CustomerDTO customerDTO){
@@ -87,6 +116,48 @@ public class UserController {
         CustomerDTO customerDTO = new CustomerDTO();
         BeanUtils.copyProperties(customer, customerDTO);
         return customerDTO;
+    }
+
+    public Employee convertEmployeeDTOToEmployee(EmployeeDTO employeeDTO){
+        Employee employee = new Employee();
+        employee.setSkills(new HashSet<>());
+        employee.setWorkingDays(new HashSet<>());
+        Set<EmployeeSkill> skills = employeeDTO.getSkills();
+        Set<DayOfWeek> days = employeeDTO.getDaysAvailable();
+        for (EmployeeSkill skill:
+             skills) {
+            Activity activity = new Activity();
+            activity.setId((long) (skill.ordinal() + 1));
+            employee.getSkills().add(activity);
+        }
+
+        for (DayOfWeek day:
+             days) {
+            WeekDays newDay = new WeekDays();
+            newDay.setId((long) (day.ordinal()+1));
+            employee.getWorkingDays().add(newDay);
+        }
+
+
+
+        BeanUtils.copyProperties(employeeDTO, employee,"skills", "workingDays");
+        return employee;
+    }
+
+    public List<EmployeeDTO> convertListEmployeesToListEmployeesDTOs(List<Employee> employees){
+        List<EmployeeDTO> employeeDTOS = new ArrayList<>();
+        for (Employee emp:
+             employees) {
+            EmployeeDTO eDtos = convertEmployeeToEmployeeDTO(emp);
+            employeeDTOS.add(eDtos);
+        }
+        return employeeDTOS;
+    }
+
+    public EmployeeDTO convertEmployeeToEmployeeDTO(Employee employee){
+        EmployeeDTO employeeDTO = new EmployeeDTO();
+        BeanUtils.copyProperties(employee, employeeDTO);
+        return employeeDTO;
     }
 
 }
