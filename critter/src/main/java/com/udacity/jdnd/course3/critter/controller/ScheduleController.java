@@ -1,6 +1,10 @@
 package com.udacity.jdnd.course3.critter.controller;
 
+import com.udacity.jdnd.course3.critter.entitiy.Activity;
+import com.udacity.jdnd.course3.critter.entitiy.Employee;
+import com.udacity.jdnd.course3.critter.entitiy.Pet;
 import com.udacity.jdnd.course3.critter.entitiy.Schedule;
+import com.udacity.jdnd.course3.critter.entitiy.types.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.service.ScheduleService;
 import com.udacity.jdnd.course3.critter.view.ScheduleDTO;
 import javassist.NotFoundException;
@@ -8,8 +12,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Handles web requests related to Schedules.
@@ -54,6 +61,27 @@ public class ScheduleController {
 
     public ScheduleDTO convertScheduleToScheduleDTO(Schedule schedule){
         ScheduleDTO scheduleDTO = new ScheduleDTO();
+
+        scheduleDTO.setEmployeeIds(new ArrayList<>());
+        for (Employee emp:
+             schedule.getEmployees()) {
+            scheduleDTO.getEmployeeIds().add(emp.getId());
+        }
+
+        scheduleDTO.setPetIds(new ArrayList<>());
+        for (Pet pet:
+                schedule.getPets()) {
+            scheduleDTO.getPetIds().add(pet.getId());
+        }
+
+        scheduleDTO.setActivities(new HashSet<>());
+        Set<Activity> activities = schedule.getActivities();
+        for (Activity activity:
+                activities) {
+
+            scheduleDTO.getPetIds().add(activity.getId()-1);
+        }
+
         BeanUtils.copyProperties(schedule, scheduleDTO, "scheduleDate");
         scheduleDTO.setDate(schedule.getScheduleDate());
         return scheduleDTO;
