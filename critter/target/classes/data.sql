@@ -41,3 +41,9 @@ INSERT INTO schedule_pets (schedule_id, pets_id) VALUES (2, 2);
 
 INSERT INTO schedule_employees (schedule_id, employees_id) VALUES (2,2);
 INSERT INTO schedule_employees (schedule_id, employees_id) VALUES (1,1);
+
+INSERT INTO schedule_activities (schedule_id, activities_id) VALUES (1, 2);
+INSERT INTO schedule_activities (schedule_id, activities_id) VALUES (2, 3);
+INSERT INTO schedule_activities (schedule_id, activities_id) VALUES (1, 5);
+INSERT INTO schedule_activities (schedule_id, activities_id) VALUES (1, 4);
+
