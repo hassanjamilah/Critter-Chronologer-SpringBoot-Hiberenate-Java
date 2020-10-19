@@ -6,6 +6,7 @@ import com.udacity.jdnd.course3.critter.repository.CustomerRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Optional;
 // TODO: 18/10/2020 add @Transactional
 
 @Service
+@Transactional
 public class CustomerService {
     @Autowired
     CustomerRepository customerRepository;
@@ -30,6 +32,9 @@ public class CustomerService {
     // TODO: 18/10/2020
     public List<Customer> getAllCustomers(){
 
+        List<Customer> all = customerRepository.findAll();
+        Customer cust = customerRepository.findById(1L).get();
+        List<Pet> pets = petService.getAllPets();
         return customerRepository.findAll();
     }
 

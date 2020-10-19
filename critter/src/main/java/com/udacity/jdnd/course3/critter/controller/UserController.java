@@ -1,9 +1,6 @@
 package com.udacity.jdnd.course3.critter.controller;
 
-import com.udacity.jdnd.course3.critter.entitiy.Activity;
-import com.udacity.jdnd.course3.critter.entitiy.Customer;
-import com.udacity.jdnd.course3.critter.entitiy.Employee;
-import com.udacity.jdnd.course3.critter.entitiy.WeekDays;
+import com.udacity.jdnd.course3.critter.entitiy.*;
 import com.udacity.jdnd.course3.critter.entitiy.types.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.EmployeeService;
@@ -156,7 +153,12 @@ public class UserController {
      */
     public CustomerDTO convertCustomerToCustomerDTO(Customer customer){
         CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setPetIds(new ArrayList<>());
         BeanUtils.copyProperties(customer, customerDTO);
+        for (Pet pet:
+             customer.getPets()) {
+            customerDTO.getPetIds().add(pet.getId());
+        }
         return customerDTO;
     }
 

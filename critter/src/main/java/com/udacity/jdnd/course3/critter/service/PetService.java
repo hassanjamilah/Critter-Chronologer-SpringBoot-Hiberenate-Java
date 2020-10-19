@@ -3,6 +3,7 @@ package com.udacity.jdnd.course3.critter.service;
 import com.udacity.jdnd.course3.critter.entitiy.Customer;
 import com.udacity.jdnd.course3.critter.entitiy.Pet;
 import com.udacity.jdnd.course3.critter.entitiy.types.PetType;
+import com.udacity.jdnd.course3.critter.repository.CustomerRepository;
 import com.udacity.jdnd.course3.critter.repository.PetRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +25,16 @@ public class PetService {
     @Autowired
     CustomerService customerService;
 
+    @Autowired
+    CustomerRepository customerRepository;
+
     // TODO: 18/10/2020
     public Long savePit(Pet pet){
 
         Pet newPet = petRepository.save(pet);
+        Customer customer = newPet.getOwnerId();
+        customer.addPet(newPet);
+        customerRepository.save(customer);
         return newPet.getId();
     }
 
