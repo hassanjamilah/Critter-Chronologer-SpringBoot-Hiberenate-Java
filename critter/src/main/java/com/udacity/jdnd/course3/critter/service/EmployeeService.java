@@ -30,8 +30,8 @@ public class EmployeeService {
 
     public Long saveEmployee(Employee employee){
         Set<Activity> kills  = employee.getSkills();
-        employeeRepository.save(employee);
-        return  employee.getId();
+        Employee emp = employeeRepository.save(employee);
+        return  emp.getId();
 
     }
 

@@ -1,6 +1,8 @@
 package com.udacity.jdnd.course3.critter.controller;
 
+import com.udacity.jdnd.course3.critter.entitiy.Customer;
 import com.udacity.jdnd.course3.critter.entitiy.Pet;
+import com.udacity.jdnd.course3.critter.service.CustomerService;
 import com.udacity.jdnd.course3.critter.service.PetService;
 import com.udacity.jdnd.course3.critter.view.PetDTO;
 import javassist.NotFoundException;
@@ -21,11 +23,14 @@ public class PetController {
     @Autowired
     PetService petService;
 
+    @Autowired
+    CustomerService customerService;
+
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
         Pet pet = convertPetDTOTOPet(petDTO);
-        petService.savePit(pet);
-        petDTO.setId(pet.getId());
+        Long newID = petService.savePit(pet);
+        petDTO.setId(newID);
         return  petDTO;
     }
 
@@ -49,15 +54,24 @@ public class PetController {
         return converListPetsToListPetDTOs(allPets);
     }
 
-    public Pet convertPetDTOTOPet(PetDTO petDTO){
+    public Pet convertPetDTOTOPet(PetDTO petDTO)  {
         Pet pet  = new Pet();
-        BeanUtils.copyProperties(petDTO, pet);
+        Customer customer = null;
+        try {
+            customer = customerService.getCustomerByID(petDTO.getOwnerId());
+            pet.setOwnerId(customer);
+            BeanUtils.copyProperties(petDTO, pet, "ownerId");
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+
         return pet;
     }
 
     public PetDTO converPetToPetDTO(Pet pet){
         PetDTO petDTO = new PetDTO();
-        BeanUtils.copyProperties(pet, petDTO);
+        petDTO.setOwnerId(pet.getOwnerId().getId());
+        BeanUtils.copyProperties(pet, petDTO, "ownerId");
         return petDTO;
     }
 

@@ -27,8 +27,8 @@ public class PetService {
     // TODO: 18/10/2020
     public Long savePit(Pet pet){
 
-        petRepository.save(pet);
-        return pet.getId();
+        Pet newPet = petRepository.save(pet);
+        return newPet.getId();
     }
 
     public List<Pet> getAllPets(){

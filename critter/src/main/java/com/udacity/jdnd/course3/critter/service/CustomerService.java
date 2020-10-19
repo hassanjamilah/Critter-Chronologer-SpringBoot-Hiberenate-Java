@@ -23,8 +23,8 @@ public class CustomerService {
 
     // TODO: 18/10/2020 Save customer
     public Long saveCustomer(Customer customer){
-        customerRepository.save(customer);
-        return customer.getId();
+        Customer cust1 = customerRepository.save(customer);
+        return cust1.getId();
     }
 
     // TODO: 18/10/2020

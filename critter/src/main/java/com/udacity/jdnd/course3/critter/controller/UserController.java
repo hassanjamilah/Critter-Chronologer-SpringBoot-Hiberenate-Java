@@ -45,8 +45,8 @@ public class UserController {
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
         Customer customer = convertCustomerDTOToCustomer(customerDTO);
-        customerService.saveCustomer(customer);
-        customerDTO.setId(customer.getId());
+        Long id = customerService.saveCustomer(customer);
+        customerDTO.setId(id);
         return customerDTO;
     }
 
@@ -88,14 +88,15 @@ public class UserController {
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
         Employee employee = convertEmployeeDTOToEmployee(employeeDTO);
-        employeeService.saveEmployee(employee);
-        employeeDTO.setId(employee.getId());
+        Long id = employeeService.saveEmployee(employee);
+        employeeDTO.setId(id);
         return employeeDTO;
     }
 
     @PostMapping("/employee/{employeeId}")
-    public EmployeeDTO getEmployee(@PathVariable long employeeId) {
-        throw new UnsupportedOperationException();
+    public EmployeeDTO getEmployee(@PathVariable long employeeId) throws NotFoundException {
+        Employee employee = employeeService.getEmployeeByID(employeeId);
+        return  convertEmployeeToEmployeeDTO(employee);
     }
 
     /**
