@@ -5,6 +5,8 @@ import com.udacity.jdnd.course3.critter.entitiy.Employee;
 import com.udacity.jdnd.course3.critter.entitiy.Pet;
 import com.udacity.jdnd.course3.critter.entitiy.Schedule;
 import com.udacity.jdnd.course3.critter.entitiy.types.EmployeeSkill;
+import com.udacity.jdnd.course3.critter.service.EmployeeService;
+import com.udacity.jdnd.course3.critter.service.PetService;
 import com.udacity.jdnd.course3.critter.service.ScheduleService;
 import com.udacity.jdnd.course3.critter.view.ScheduleDTO;
 import javassist.NotFoundException;
@@ -26,6 +28,12 @@ import java.util.Set;
 public class ScheduleController {
     @Autowired
     ScheduleService scheduleService;
+
+    @Autowired
+    PetService petService;
+
+    @Autowired
+    EmployeeService employeeService;
 
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
@@ -79,17 +87,47 @@ public class ScheduleController {
         for (Activity activity:
                 activities) {
 
-            scheduleDTO.getPetIds().add(activity.getId()-1);
+            scheduleDTO.getActivities().add(EmployeeSkill.valueOf(activity.getActivityName()));
         }
 
-        BeanUtils.copyProperties(schedule, scheduleDTO, "scheduleDate");
+        BeanUtils.copyProperties(schedule, scheduleDTO, "scheduleDate", "petIds", "employeeIds", "activities");
         scheduleDTO.setDate(schedule.getScheduleDate());
         return scheduleDTO;
     }
 
     public Schedule convertSchedultDTOToSchedule(ScheduleDTO scheduleDTO){
         Schedule schedule = new Schedule();
-        BeanUtils.copyProperties(scheduleDTO, schedule);
+        BeanUtils.copyProperties(scheduleDTO, schedule, "activities");
+        schedule.setPets(new ArrayList<>());
+        schedule.setEmployees(new ArrayList<>());
+        schedule.setActivities(new HashSet<>());
+        for (Long id:
+             scheduleDTO.getPetIds()) {
+            try {
+                Pet pet = petService.getPetByID(id);
+                schedule.getPets().add(pet);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (Long id:
+                scheduleDTO.getEmployeeIds()) {
+            try {
+                Employee emp = employeeService.getEmployeeByID(id);
+                schedule.getEmployees().add(emp);
+            } catch (NotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        for (EmployeeSkill skill: scheduleDTO.getActivities()){
+            Activity activity  = new Activity((long) (skill.ordinal() +1));
+            schedule.getActivities().add(activity);
+        }
+
+        schedule.setScheduleDate(scheduleDTO.getDate());
+
         return schedule;
     }
 

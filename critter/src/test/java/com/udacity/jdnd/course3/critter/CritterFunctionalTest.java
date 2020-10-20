@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.udacity.jdnd.course3.critter.controller.PetController;
 import com.udacity.jdnd.course3.critter.controller.UserController;
+import com.udacity.jdnd.course3.critter.entitiy.Activity;
 import com.udacity.jdnd.course3.critter.entitiy.types.EmployeeSkill;
 import com.udacity.jdnd.course3.critter.view.*;
 import com.udacity.jdnd.course3.critter.entitiy.types.PetType;
@@ -185,12 +186,16 @@ public class CritterFunctionalTest {
         LocalDate date = LocalDate.of(2019, 12, 25);
         List<Long> petList = Lists.newArrayList(petDTO.getId());
         List<Long> employeeList = Lists.newArrayList(employeeDTO.getId());
-        Set<EmployeeSkill> skillSet =  Sets.newHashSet(EmployeeSkill.PETTING);
+        Long id = (long) EmployeeSkill.PETTING.ordinal() + 1;
+        Activity activity = new Activity(id);
+        Set<Activity> skillSet =  Sets.newHashSet(activity);
 
-        scheduleController.createSchedule(createScheduleDTO(petList, employeeList, date, skillSet));
+
+        Set<EmployeeSkill> skillSet1 = Sets.newHashSet(EmployeeSkill.PETTING);
+        scheduleController.createSchedule(createScheduleDTO(petList, employeeList, date, skillSet1));
         ScheduleDTO scheduleDTO = scheduleController.getAllSchedules().get(0);
 
-        Assertions.assertEquals(scheduleDTO.getActivities(), skillSet);
+        Assertions.assertEquals(scheduleDTO.getActivities(), skillSet1);
         Assertions.assertEquals(scheduleDTO.getDate(), date);
         Assertions.assertEquals(scheduleDTO.getEmployeeIds(), employeeList);
         Assertions.assertEquals(scheduleDTO.getPetIds(), petList);
