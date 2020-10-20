@@ -8,12 +8,14 @@ import com.udacity.jdnd.course3.critter.repository.ScheduleRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 // TODO: 18/10/2020 add @Transactional 
 
 @Service
+@Transactional
 public class ScheduleService {
     @Autowired
     ScheduleRepository scheduleRepository;
