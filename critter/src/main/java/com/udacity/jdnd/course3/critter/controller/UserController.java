@@ -217,6 +217,13 @@ public class UserController {
 
 
         BeanUtils.copyProperties(employee, employeeDTO);
+        employeeDTO.setDaysAvailable(new HashSet<>());
+        for (WeekDays day:
+             employee.getWorkingDays()) {
+            int id = Math.toIntExact(day.getId());
+            employeeDTO.getDaysAvailable().add(DayOfWeek.of(id));
+            System.out.println();
+        }
         return employeeDTO;
     }
 

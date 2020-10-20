@@ -30,8 +30,8 @@ public class PetController {
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
         Pet pet = convertPetDTOTOPet(petDTO);
         Long newID = petService.savePit(pet);
-        petDTO.setId(newID);
-        return  petDTO;
+        pet.setId(newID);
+        return  converPetToPetDTO(pet);
     }
 
     @GetMapping("/{petId}")
