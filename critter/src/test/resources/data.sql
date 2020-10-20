@@ -12,7 +12,7 @@ insert into week_days (id, day_name) values (3, 'Wednsday');
 insert into week_days (id, day_name) values (4, 'Thursday');
 insert into week_days (id, day_name) values (5, 'Friday');
 --
----- TODO: Temp please remove tis
+----  Sample values
 --insert into customer (name, phone_number) values ('hassan13' , '132432423');
 --insert into customer (name, phone_number) values ('Maya' , '132432423');
 --insert into pet (name, type, owner_id_id) values ('my cat', 1, 1) ;
